@@ -24,7 +24,7 @@ REST API для учёта контейнеров и зон хранения с 
 1. Клонируйте репозиторий:
 ```bash
 git clone <repository-url>
-cd container-management-api
+cd testPeoject-
 ```
 
 2. Создайте файл `.env`:
