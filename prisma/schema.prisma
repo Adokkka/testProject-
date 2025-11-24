@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Container {
+  id          Int             @id @default(autoincrement())
+  number      String          @unique
+  type        ContainerType
+  status      ContainerStatus @default(ARRIVED)
+  zoneId      Int?            @map("zone_id")
+  arrivalTime DateTime        @default(now()) @map("arrival_time")
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+  zone        Zone?           @relation(fields: [zoneId], references: [id])
+
+  @@map("containers")
+}
+
+model Zone {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  capacity    Int
+  currentLoad Int         @default(0) @map("current_load")
+  type        ZoneType    @default(STANDARD)
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  containers  Container[]
+
+  @@map("zones")
+}
+
+enum ContainerType {
+  DRY
+  REFRIGERATED
+  OPEN_TOP
+  FLAT_RACK
+  TANK
+}
+
+enum ContainerStatus {
+  ARRIVED
+  IN_STORAGE
+  SHIPPED
+  DAMAGED
+  MAINTENANCE
+}
+
+enum ZoneType {
+  STANDARD
+  REFRIGERATED
+  HAZARDOUS
+  CUSTOMS
+}
